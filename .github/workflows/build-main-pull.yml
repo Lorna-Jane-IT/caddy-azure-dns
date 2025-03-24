@@ -25,22 +25,22 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
 
-      - name: Lowercase REGISTRY
+      - name: Lowercase IMAGE_NAME
         run: |
-          echo "REGISTRY_LC=${REGISTRY@L}" >> ${GITHUB_ENV}
+          echo "IMAGE_NAME_LC=${IMAGE_NAME@L}" >> ${GITHUB_ENV}
 
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY_LC }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}
 
       - name: Build for testing
         uses: docker/build-push-action@v6
         with:
           load: true
-          tags: ${{ env.REGISTRY_LC }}/${{ env.IMAGE_NAME }}:test
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:test
 
       - name: Test build
         run: |
-          docker run --rm ${{ env.REGISTRY_LC }}/${{ env.IMAGE_NAME }}:test /bin/sh -c "caddy version; caddy list-modules; caddy environ;"
+          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:test /bin/sh -c "caddy version; caddy list-modules; caddy environ;"
