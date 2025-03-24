@@ -1,7 +1,7 @@
 services:
   caddy:
     container_name: caddy-azure-dns
-    image: caddy-azure-dns
+    image: ghcr.io/lorna-jane-it/caddy-azure-dns:latest
     restart: unless-stopped
     ports:
       - "80:80"
@@ -11,15 +11,10 @@ services:
       - TZ=Australia/Brisbane
       - AZURE_TENANT_ID=abcdefghijklmnopqrstuvwxyz
       - AZURE_CLIENT_ID=abcdefghijklmnopqrstuvwxyz
-      - AZURE_CLIENT_SECRET=/run/secrets/azure_client_secret
+      - AZURE_CLIENT_SECRET="abcdefghijklmnopqrstuvwxyz"
       - AZURE_SUBSCRIPTION_ID=abcdefghijklmnopqrstuvwxyz
       - AZURE_RESOURCE_GROUP_NAME=abcdefghijklmnopqrstuvwxyz
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
+      - /docker-data-path/Caddyfile:/etc/caddy/Caddyfile
       - /docker-data-path/data:/data
       - /docker-data-path/config:/config
-    secrets:
-      - azure_client_secret
-secrets:
-  azure_client_secret:
-    file: ./azure_client_secret.txt
