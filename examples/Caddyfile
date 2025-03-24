@@ -1,0 +1,59 @@
+{
+  acme_dns azure {
+    subscription_id {$AZURE_SUBSCRIPTION_ID}
+    resource_group_name {$AZURE_RESOURCE_GROUP_NAME}
+    tenant_id {$AZURE_TENANT_ID}
+    client_id {$AZURE_CLIENT_ID}
+    client_secret {$AZURE_CLIENT_SECRET}
+  }
+}
+
+https://example.yourdomain.net:7443 {
+
+	reverse_proxy * target1:8080
+
+	# Admin reverse proxy with ACL
+  @admin_denied {
+    path /admin*
+    not remote_ip 10.0.10.251/32
+  }
+  handle @admin_denied {
+    respond "Access Denied" 403
+  }
+  
+  @admin_allowed {
+    path /admin*
+    remote_ip 10.0.10.251/32
+  }
+  handle @admin_allowed {
+    reverse_proxy target1:3000
+  }
+
+	# Admin reverse proxy with ACL
+  @metrics_denied {
+    path /metrics*
+    not remote_ip 10.0.10.0/24
+  }
+  handle @metrics_denied {
+    respond "Access Denied" 403
+  }
+  
+  @metrics_allowed {
+    path /metrics*
+    remote_ip 10.0.10.0/24
+  }
+  handle @metrics_allowed {
+    reverse_proxy target2:9090
+  }	
+	
+	log {
+    output file /data/logs/example.yourdomain.net.log {
+      roll_size 5MiB
+      roll_keep 10
+      roll_keep_for 100d
+    }
+    format json
+    level INFO
+  }
+
+}

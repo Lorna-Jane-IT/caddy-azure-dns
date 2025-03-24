@@ -1,0 +1,6 @@
+services:
+  caddyazuredns:
+    image: caddy-azure-dns
+    build:
+      context: .
+      dockerfile: ./Dockerfile
