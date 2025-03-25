@@ -8,12 +8,12 @@ services:
       - "443:443"
       - "443:443/udp"
     environment:
-      - TZ=Australia/Brisbane
-      - AZURE_TENANT_ID=abcdefghijklmnopqrstuvwxyz
-      - AZURE_CLIENT_ID=abcdefghijklmnopqrstuvwxyz
-      - AZURE_CLIENT_SECRET="abcdefghijklmnopqrstuvwxyz"
-      - AZURE_SUBSCRIPTION_ID=abcdefghijklmnopqrstuvwxyz
-      - AZURE_RESOURCE_GROUP_NAME=abcdefghijklmnopqrstuvwxyz
+      - TZ=${TZ:-Australia/Brisbane}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID:?error}
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID:?error}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET:?error}
+      - AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID:?error}
+      - AZURE_RESOURCE_GROUP_NAME=${AZURE_RESOURCE_GROUP_NAME:?error}
     volumes:
       - /docker-data-path/Caddyfile:/etc/caddy/Caddyfile
       - /docker-data-path/data:/data
